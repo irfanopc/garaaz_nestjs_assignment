@@ -1,11 +1,24 @@
-import { Button, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react";
+
+
+import {
+  Button,
+  FormControl,
+  Input,
+  Select,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function AddBrandSalesDailyPage() {
-  const history = useNavigate();
+  const navigator = useNavigate();
 
   const validationSchema = Yup.object().shape({
     brand: Yup.string().required("Brand is required"),
@@ -22,6 +35,7 @@ function AddBrandSalesDailyPage() {
       .required("Gross Margin Percentage is required")
       .min(0, "Gross Margin Percentage must be between 0 and 100")
       .max(100, "Gross Margin Percentage must be between 0 and 100"),
+    transactionType: Yup.string().required("Transaction Type is required"),
   });
 
   const initialValues = {
@@ -29,6 +43,7 @@ function AddBrandSalesDailyPage() {
     totalOrders: "",
     totalOrderValue: "",
     grossMarginPercentage: "",
+    transactionType: "",
   };
 
   const handleSubmit = (values) => {
@@ -38,10 +53,11 @@ function AddBrandSalesDailyPage() {
         totalOrders: parseInt(values.totalOrders),
         totalOrderValue: parseInt(values.totalOrderValue),
         grossMarginPercentage: parseInt(values.grossMarginPercentage),
+        transactionType: values.transactionType,
         date: new Date(),
       })
       .then(() => {
-        history("/get-brand-sales-daily");
+        navigator("/get-brand-sales-daily");
       })
       .catch((error) => {
         console.log(error);
@@ -56,83 +72,121 @@ function AddBrandSalesDailyPage() {
     >
       {({ isSubmitting }) => (
         <Form>
-          <Stack spacing={4}>
-            <Field name="brand">
-              {({ field, form }) => (
-                <FormControl
-                  isInvalid={form.errors.brand && form.touched.brand}
-                >
-                  <FormLabel htmlFor="brand">Brand</FormLabel>
-                  <Input {...field} id="brand" placeholder="Brand" />
-                  <ErrorMessage name="brand" />
-                </FormControl>
-              )}
-            </Field>
-            <Field name="totalOrders">
-              {({ field, form }) => (
-                <FormControl
-                  isInvalid={
-                    form.errors.totalOrders && form.touched.totalOrders
-                  }
-                >
-                  <FormLabel htmlFor="totalOrders">Total Orders</FormLabel>
-                  <Input
-                    {...field}
-                    id="totalOrders"
-                    placeholder="Total Orders"
-                  />
-                  <ErrorMessage name="totalOrders" />
-                </FormControl>
-              )}
-            </Field>
-            <Field name="totalOrderValue">
-              {({ field, form }) => (
-                <FormControl
-                  isInvalid={
-                    form.errors.totalOrderValue && form.touched.totalOrderValue
-                  }
-                >
-                  <FormLabel htmlFor="totalOrderValue">
-                    Total Order Value
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="totalOrderValue"
-                    placeholder="Total Order Value"
-                  />
-                  <ErrorMessage name="totalOrderValue" />
-                </FormControl>
-              )}
-            </Field>
-            <Field name="grossMarginPercentage">
-              {({ field, form }) => (
-                <FormControl
-                  isInvalid={
-                    form.errors.grossMarginPercentage &&
-                    form.touched.grossMarginPercentage
-                  }
-                >
-                  <FormLabel htmlFor="grossMarginPercentage">
-                    Gross Margin Percentage
-                  </FormLabel>
-                  <Input
-                    {...field}
-                    id="grossMarginPercentage"
-                    placeholder="Gross Margin Percentage"
-                  />
-                  <ErrorMessage name="grossMarginPercentage" />
-                </FormControl>
-              )}
-            </Field>
-            <Button
-              mt={4}
-              colorScheme="teal"
-              isLoading={isSubmitting}
-              type="submit"
-            >
-              Add Brand Sales Daily
-            </Button>
-          </Stack>
+          <Table variant="simple" w="100%" mx="auto">
+            <Thead>
+              <Tr>
+                <Th>Brand</Th>
+                <Th>Total Orders</Th>
+                <Th>Total Order Value</Th>
+                <Th>Gross Margin Percentage</Th>
+                <Th>Transaction Type</Th>
+                <Th>Action</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>
+                  <Field name="brand">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={form.errors.brand && form.touched.brand}
+                      >
+                        <Input {...field} id="brand" placeholder="Brand" />
+                        <ErrorMessage name="brand" />
+                      </FormControl>
+                    )}
+                  </Field>
+                </Td>
+                <Td>
+                  <Field name="totalOrders">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.totalOrders && form.touched.totalOrders
+                        }
+                      >
+                        <Input
+                          {...field}
+                          id="totalOrders"
+                          placeholder="Total Orders"
+                        />
+                        <ErrorMessage name="totalOrders" />
+                        </FormControl>
+                         )}
+                      </Field>
+                </Td>
+                <Td>
+                  <Field name="totalOrderValue">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.totalOrderValue &&
+                          form.touched.totalOrderValue
+                        }
+                      >
+                        <Input
+                          {...field}
+                          id="totalOrderValue"
+                          placeholder="Total Order Value"
+                        />
+                        <ErrorMessage name="totalOrderValue" />
+                      </FormControl>
+                    )}
+                  </Field>
+                </Td>
+                <Td>
+                  <Field name="grossMarginPercentage">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.grossMarginPercentage &&
+                          form.touched.grossMarginPercentage
+                        }
+                      >
+                        <Input
+                          {...field}
+                          id="grossMarginPercentage"
+                          placeholder="Gross Margin Percentage"
+                        />
+                        <ErrorMessage name="grossMarginPercentage" />
+                      </FormControl>
+                    )}
+                  </Field>
+                </Td>
+                <Td>
+                  <Field name="transactionType">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.transactionType &&
+                          form.touched.transactionType
+                        }
+                      >
+                        <Select
+                          {...field}
+                          id="transactionType"
+                          placeholder="Transaction Type"
+                        >
+                          <option value="Trading">Trading</option>
+                          <option value="Facilitation ">Facilitation </option>
+                        </Select>
+                        <ErrorMessage name="transactionType" />
+                      </FormControl>
+                    )}
+                  </Field>
+                </Td>
+                <Td>
+                  <Button
+                    type="submit"
+                    colorScheme="blue"
+                    isLoading={isSubmitting}
+                  >
+                    Add
+                  </Button>
+                </Td>
+              </Tr>
+            </Tbody>
+          </Table>
         </Form>
       )}
     </Formik>

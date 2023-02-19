@@ -5,9 +5,6 @@ import { Document } from "mongoose";
     timestamps:true
 })
 export class BrandSalesDaily extends Document {
-
-    @Prop()
-    price:Number;
     @Prop()
     date: Date;
     @Prop()
